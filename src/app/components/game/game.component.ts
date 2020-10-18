@@ -16,7 +16,8 @@ export class GameComponent implements OnInit {
   message$ = new BehaviorSubject<string>('');
   numberOfTries = 0;
   numberOfWins = 0;
-  randonWord: string;
+  randonWords: string[];
+  word: string;
   scrambledWord: string;
   gameForm: FormGroup;
 
@@ -24,25 +25,21 @@ export class GameComponent implements OnInit {
     return this.gameForm.get('playerWord') as FormControl;
   }
 
-
   constructor(private wordService: WordsService) { }
 
   ngOnInit() {
     this.gameForm = new FormGroup({
       playerWord: new FormControl(''),
     });
-
-    this.wordService.getWords().subscribe(randomWord => this.randonWord = randomWord);
+    this.wordService.getWords().subscribe(randomWords => this.randonWords = randomWords);
     this.scrambleWord();
   }
 
   checkGuess() {
-    if (this.playerWord.value === this.randonWord) {
-      this.playerWord.value('')
+    if (this.playerWord.value === this.word) {
       this.isCorrect$.next('yes');
       this.message$.next(correct);
       this.numberOfWins = this.numberOfWins + 1;
-      this.wordService.getWords().subscribe(randomWord => this.randonWord = randomWord);
       this.scrambleWord();
     } else {
       this.isCorrect$.next('no');
@@ -52,14 +49,16 @@ export class GameComponent implements OnInit {
     }
   }
   private scrambleWord() {
-    this.scrambledWord = this.randonWord.split('').sort(() => 0.5 - Math.random()).join('');
-    if (this.randonWord === this.scrambledWord) {
+    const randomNumber = Math.floor(Math.random() * this.randonWords.length);
+    this.word = this.randonWords[randomNumber];
+    this.scrambledWord = this.word.split('').sort(() => 0.5 - Math.random()).join('');
+    if (this.word === this.scrambledWord) {
       this.scrambleWord();
     }
   }
   gameOver() {
     this.numberOfTries = 0;
-    this.playerWord.setValue(this.randonWord);
+    this.playerWord.setValue(this.word);
     this.message$.next('Thank You For Playing!');
     this.isCorrect$.next('game-over');
   }
@@ -69,7 +68,6 @@ export class GameComponent implements OnInit {
     this.numberOfTries = 0;
     this.numberOfWins = 0;
     this.scrambleWord();
-    this.wordService.getWords().subscribe(randomWord => this.randonWord = randomWord);
     this.scrambleWord();
   }
 
