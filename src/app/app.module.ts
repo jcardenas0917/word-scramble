@@ -8,7 +8,6 @@ import { GameComponent } from './components/game/game.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './utils/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout/typings/module';
 
 @NgModule({
   declarations: [
@@ -21,8 +20,8 @@ import { FlexLayoutModule } from '@angular/flex-layout/typings/module';
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    ReactiveFormsModule,
-    FlexLayoutModule
+    ReactiveFormsModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]
