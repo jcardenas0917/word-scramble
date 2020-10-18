@@ -1,1 +1,33 @@
-<p>game works!</p>
+<div>
+  <div>
+    {{scrambledWord}}
+  </div>
+  <div>
+    Tries: {{numberOfTries}}
+  </div>
+  <div>
+    Wins: {{numberOfWins}}
+  </div>
+  <form class="game-form" [formGroup]="gameForm" (submit)="checkGuess()">
+    <mat-form-field class="user-input">
+      <mat-label>Enter Guess</mat-label>
+      <input matInput type="text" (click)="clearField()" formControlName="playerWord" appAutofocus autocomplete="off">
+    </mat-form-field>
+
+    <button [disabled]="numberOfTries === 3 || (isCorrect$ | async) ==='game-over' || playerWord.invalid" mat-button
+      color="primary" type="submit">Submit
+      Guess</button>
+    <div *ngIf="numberOfTries === 3">
+      Sorry Game Over Would you like to play again?
+      <button (click)="playAgain()">Yes Play Again!</button>
+      <button (click)="gameOver()">No Quit Game</button>
+    </div>
+    <div *ngIf="(this.isCorrect$ | async) === 'yes'">
+      {{message$ | async}}
+    </div>
+    <div *ngIf="(this.isCorrect$ | async) === 'no' && numberOfTries < 3">
+      {{message$ | async}}
+    </div>
+  </form>
+
+</div>
